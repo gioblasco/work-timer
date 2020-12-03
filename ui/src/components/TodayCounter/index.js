@@ -1,17 +1,9 @@
 import { useTodayCounter } from "../../customHooks/useTodayCounter";
 
 function TodayCounter() {
-    const {content = []} = useTodayCounter();
+    const {todayCounter = []} = useTodayCounter();
     return (
-        <>
-          { content.map((item) => {
-            return (  
-            <>
-                <p>{item.date}</p>
-                <p>{item.begin}~{item.end}</p>
-            </>)
-          })}
-        </>
+      <h1>Hoje você trabalhou por: { todayCounter }</h1>
     );
 }
 
