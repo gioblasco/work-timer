@@ -5,7 +5,7 @@ import useFetch from "./useFetch";
 import moment from 'moment';
 
 export const useTodayCounter = () => {
-    const {content} = useFetch(`http://localhost:3000/history?date=${moment().format("YYYY-MM-DD")}`, [], 30000);
+    const {content} = useFetch(`http://localhost:2000/history?date=${moment().format("YYYY-MM-DD")}`, [], 30000);
     const [todayCounter, setTodayCounter] = useState("0h");
 
     useEffect(() => {

@@ -17,7 +17,7 @@ async function saveNewPeriod(todayData, dateTime) {
     "finished": false
   }
 
-  await fetch(`http://localhost:3000/history/`,
+  await fetch(`http://localhost:2000/history/`,
   { 
     method: 'POST', 
     body: JSON.stringify(newPeriod),
@@ -31,11 +31,11 @@ async function saveNewPeriod(todayData, dateTime) {
 }
 
 function saveFinishedPeriod(todayData, currentTime) {
-  let unfinishedOccurrence = todayData.find((occurrence) => !occurrence.finished);
+  let unfinishedOccurrence = todayData.find((occurrence) => occurrence !== null && !occurrence.finished);
   if (!!unfinishedOccurrence) {
     unfinishedOccurrence.finished = true;
     unfinishedOccurrence.end = currentTime;
-    fetch(`http://localhost:3000/history/${unfinishedOccurrence.id}`,
+    fetch(`http://localhost:2000/history/${unfinishedOccurrence.id}`,
     { 
       method: 'PUT', 
       body: JSON.stringify(unfinishedOccurrence),
@@ -50,7 +50,7 @@ function saveFinishedPeriod(todayData, currentTime) {
 const Main = () => {
     const [isWorking, setIsWorking] = useState(false);
     const [todayData, setTodayData] = useState([]);
-    const {content} = useFetch(`http://localhost:3000/history?date=${moment().format("YYYY-MM-DD")}`, [], null);
+    const {content} = useFetch(`http://localhost:2000/history?date=${moment().format("YYYY-MM-DD")}`, [], null);
 
     useEffect(() => {
       setIsWorking(getInitialState(content));
