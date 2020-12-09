@@ -16,8 +16,7 @@ export const useFetch = (url, initialValue, refresh) => {
                 return response.json();
             })
             .then((json) => {
-                console.log(`[useFetch] Response data:`);
-                console.log(json);
+                console.log(`[useFetch] Response data: ${JSON.stringify(json)}`);
                 setContent(json);
             })
             .catch((err) => {

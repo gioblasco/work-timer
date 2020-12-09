@@ -9,7 +9,7 @@ function getInitialState(data) {
   return data.some((period) => !period.finished);
 }
 
-async function saveNewPeriod(todayData, dateTime) {
+async function saveNewPeriod(dateTime) {
   let newPeriod = {
     "date": dateTime.format("YYYY-MM-DD"),
     "begin": dateTime.format("HH:mm:ss"),
@@ -17,7 +17,7 @@ async function saveNewPeriod(todayData, dateTime) {
     "finished": false
   }
 
-  await fetch(`http://localhost:2000/history/`,
+  return await fetch(`http://localhost:2000/history/`,
   { 
     method: 'POST', 
     body: JSON.stringify(newPeriod),
@@ -25,26 +25,31 @@ async function saveNewPeriod(todayData, dateTime) {
         "Content-Type": "application/json"
     }
   })
-  .then((response) => { response.json() })
-  .then((json) => { return json; })
-  .catch((err) => { return null; });
+  .then((response) => { return response.json(); })
+  .then((json) => { console.log(`[saveNewPeriod] Saved period: ${JSON.stringify(json)}`); return { response: json, saved: true }})
+  .catch((err) => { console.log(`[saveNewPeriod] exception was thrown when saving new period: ${err}`); return { response: null, saved: false } });
 }
 
-function saveFinishedPeriod(todayData, currentTime) {
+async function saveFinishedPeriod(todayData, currentTime) {
   let unfinishedOccurrence = todayData.find((occurrence) => occurrence !== null && !occurrence.finished);
   if (!!unfinishedOccurrence) {
     unfinishedOccurrence.finished = true;
     unfinishedOccurrence.end = currentTime;
-    fetch(`http://localhost:2000/history/${unfinishedOccurrence.id}`,
+
+    return await fetch(`http://localhost:2000/history/${unfinishedOccurrence.id}`,
     { 
       method: 'PUT', 
       body: JSON.stringify(unfinishedOccurrence),
       headers: {
           "Content-Type": "application/json"
       }
-    });
-    //TODO: Change isWorking and today data state only after PUT was successful
+    })
+    .then((response) => { return response.json() })
+    .then((json) => { console.log(`[saveFinishedPeriod] Saved period: ${JSON.stringify(json)}`); return true;})
+    .catch((err) => { console.log(`[saveFinishedPeriod] exception was thrown when saving new period: ${err}`); return false;})
   }
+
+  return false;
 }
 
 const Main = () => {
@@ -59,23 +64,28 @@ const Main = () => {
 
     async function onWorkStatusChange(status) {
       console.log(`[App] Received working status: ${status}`);
-      setIsWorking(status);
 
       let now = moment();
       if(!status) {
-        saveFinishedPeriod(todayData, now.format("HH:mm:ss"));
+        let finishedPeriod = await saveFinishedPeriod(todayData, now.format("HH:mm:ss"));
+        if (finishedPeriod) {
+          setIsWorking(status);
+        }
         return;
       }
-      let newPeriod = await saveNewPeriod(todayData, now);
-      // TODO: Check if saved new period is actually valid before updating today data and isWorking
-      setTodayData(oldTodayData => [...oldTodayData, newPeriod]);
+      let newPeriod = await saveNewPeriod(now);
+      if (newPeriod.saved) {
+        setTodayData(oldTodayData => [...oldTodayData, newPeriod.response]);
+        setIsWorking(status);
+      }
     }
 
     return ( 
         <>
-            <Status isWorking={isWorking} />
-            <SwitchButton isOn={isWorking} changeSwitch={onWorkStatusChange} />
-            <TodayCounter />
+            <Status isWorking={isWorking}>
+              <SwitchButton isOn={isWorking} changeSwitch={onWorkStatusChange} />
+            </Status>
+            <TodayCounter data={todayData} />
         </>
      );
 }

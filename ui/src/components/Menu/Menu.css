@@ -1,0 +1,16 @@
+.button {
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    text-transform: uppercase;
+    width: 20vw;
+    padding: 0.7%;
+    border: 3px solid #8ea8f8;
+    color:  #8ea8f8;
+    background-color: transparent;
+}
+
+.selected {
+    background-color:  #8ea8f8;
+    color: white;
+}

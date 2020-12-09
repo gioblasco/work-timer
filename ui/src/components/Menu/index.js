@@ -1,11 +1,12 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import './Menu.css';
 
 const Menu = () => {
     return (
         <>
-            <Link to="/">Hoje</Link> 
-            {' '}|{' '}
-            <Link to="/timesheet">Histórico</Link>
+            <NavLink to="/" activeClassName="selected" className="button" end>hoje</NavLink>
+            <NavLink to="/timesheet" activeClassName="selected" className="button">mês</NavLink>
+            <NavLink to="/teste" activeClassName="selected" className="button">ano</NavLink>
         </>
     );
 }

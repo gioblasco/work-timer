@@ -1,0 +1,18 @@
+.status-bar {
+    margin-top: 8vh;
+}
+
+.status-bar > h1 {
+    text-transform: uppercase;
+    display: inline-block;
+    margin: 0vh 1vw 0vh 1vw;
+}
+
+.regular-text {
+    color: #C4C4C4;
+}
+
+.working-text {
+    color: #5874c0;
+}
+

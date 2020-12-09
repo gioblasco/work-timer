@@ -1,15 +1,18 @@
 import { useEffect } from "react";
+import './Status.css';
 
-function Status({isWorking}) {
+function Status({isWorking, children}) {
 
     useEffect(() => {
         console.log(`[Status] ${isWorking ? "Working" : "Not Working"}`);
     }, [isWorking]);
 
     return (
-        <>
-            { isWorking ? <h1>Você está trabalhando!</h1> : <h1>Você não está trabalhando...</h1> }
-        </>
+        <div className="status-bar">
+            <h1 className="regular-text">Descansando</h1> 
+                { children }
+            <h1 className={isWorking ? "working-text" : "regular-text"}>Trabalhando</h1>
+        </div>
     )
 }
 
