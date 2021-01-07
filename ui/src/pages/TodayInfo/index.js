@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import useFetch from '../../customHooks/useFetch';
-import Status from '../../components/Status';
+import Status from './components/CurrentStatus';
 import SwitchButton from '../../components/SwitchButton';
-import TodayCounter from '../../components/TodayCounter';
+import TodayCounter from './components/TodayCounter';
 import moment from 'moment';
 
 function getInitialState(data) {
@@ -17,7 +17,7 @@ async function saveNewPeriod(dateTime) {
     "finished": false
   }
 
-  return await fetch(`http://localhost:2000/history/`,
+  return await fetch(process.env.REACT_APP_SERVER_URL,
   { 
     method: 'POST', 
     body: JSON.stringify(newPeriod),
@@ -36,7 +36,7 @@ async function saveFinishedPeriod(todayData, currentTime) {
     unfinishedOccurrence.finished = true;
     unfinishedOccurrence.end = currentTime;
 
-    return await fetch(`http://localhost:2000/history/${unfinishedOccurrence.id}`,
+    return await fetch(`${process.env.REACT_APP_SERVER_URL}/${unfinishedOccurrence.id}`,
     { 
       method: 'PUT', 
       body: JSON.stringify(unfinishedOccurrence),
@@ -52,10 +52,10 @@ async function saveFinishedPeriod(todayData, currentTime) {
   return false;
 }
 
-const Main = () => {
+const TodayInfo = () => {
     const [isWorking, setIsWorking] = useState(false);
     const [todayData, setTodayData] = useState([]);
-    const {content} = useFetch(`http://localhost:2000/history?date=${moment().format("YYYY-MM-DD")}`, [], null);
+    const {content} = useFetch(`${process.env.REACT_APP_SERVER_URL}?date=${moment().format("YYYY-MM-DD")}`, [], null);
 
     useEffect(() => {
       setIsWorking(getInitialState(content));
@@ -90,4 +90,4 @@ const Main = () => {
      );
 }
  
-export default Main;
+export default TodayInfo;

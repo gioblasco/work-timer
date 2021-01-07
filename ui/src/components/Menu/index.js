@@ -5,8 +5,8 @@ const Menu = () => {
     return (
         <>
             <NavLink to="/" activeClassName="selected" className="button" end>hoje</NavLink>
-            <NavLink to="/timesheet" activeClassName="selected" className="button">mês</NavLink>
-            <NavLink to="/teste" activeClassName="selected" className="button">ano</NavLink>
+            <NavLink to="/month" activeClassName="selected" className="button">mês</NavLink>
+            <NavLink to="/year" activeClassName="selected" className="button">ano</NavLink>
         </>
     );
 }

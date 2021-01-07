@@ -1,7 +1,7 @@
-import { useDayCounter } from "../../customHooks/useDayCounter";
+import { useDayCounter } from "../../../../customHooks/useDayCounter";
 
 function TodayCounter({data = []}) {
-    const {dayCounter = []} = useDayCounter(data);
+    const {dayCounter = ""} = useDayCounter(data, 30);
     return (
       <h1>Hoje você trabalhou por: { dayCounter }</h1>
     );

@@ -3,7 +3,7 @@ import sumOccurrenceTime from "../globalFunctions/sumOccurrenceTime";
 import msToTime from "../globalFunctions/msToTime";
 import moment from 'moment';
 
-export const useDayCounter = (data) => {
+export const useDayCounter = (data, refreshSeconds) => {
     const [dayCounter, setDayCounter] = useState("0h");
 
     useEffect(() => {
@@ -19,7 +19,12 @@ export const useDayCounter = (data) => {
             setDayCounter(msToTime(todayCount).formatted);
         }
         countHoursForDay();
-        let interval = setInterval(() => countHoursForDay(), 30000);
+
+        let interval = null;
+        if (!!refreshSeconds) {
+            console.log(`[useDayCounter] should refresh after ${refreshSeconds} s`)
+            interval = setInterval(() => countHoursForDay(), refreshSeconds * 1000);
+        }
 
         return () => {
             clearInterval(interval);
